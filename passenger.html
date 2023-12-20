@@ -1,0 +1,74 @@
+<html>
+<head>
+    <!-- Подключаемые из локального каталога файлы с описаниями классов и пр. -->
+	<script type="text/javascript" src="passenger.js"></script>
+	<script type="text/javascript" src="script.js"></script>
+    <!-- Подключение jquery по общедоступной ссылке, можете перейти - посмотреть на 
+    сжатый донельзя код фреймворка -->
+	<script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script type="text/javascript">
+		// Скрипт, выполняемый при загрузке страницы
+        // Он прячет элементы, которые будут отображать данные из базы
+        $(document).ready(function() {
+    $('#search_button').hide();
+    $("#passenger_table").hide();
+    $('.error_message').hide();
+
+    $.ajax({
+        url: yandex_function_url,
+        method: 'GET',
+        data: {
+            "data": "passenger_list"
+        },
+        // Поле, указывающее, какую функцию выполнить на 
+        // успешное получение ответа
+        success: function(data){ 
+            $("#passenger_table").show();
+            $('#search_button').show();
+            console.log(preconvert_json(data))
+            console.log(JSON.parse(preconvert_json(data)))
+            update_passenger_list(data)    
+        }
+    }).fail(function(data){
+        output_error("GET request failed");
+    })
+
+    // По примеру из прошлой лабы делаем заведомо неудачный 
+    // POST запрос, выводящий ошибку
+    $.ajax({
+        url: yandex_function_url,
+        method: 'POST',
+        success: function(data){ 
+            console.log(data); 
+        }
+    }).fail(function(data){
+        output_error("POST request failed");
+    })
+});
+	</script>
+    <!-- Подключение стилей из внешнего файла -->
+	<link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- Блок с текстом ошибки -->
+	<div class='error_message'>Not found</div> 
+    <!-- Таблица с идентификатором, при помощи которого к ней будет
+    обращаться код, использующий jQuery -->
+	<table id='passenger_table'>
+		<tr>
+			<th>Id_passenger</th>
+			<th>Date</th>
+			<th>FIO</th>
+			<th>Number passport</th>
+			<th>Sex</th>
+		</tr>
+	</table>
+
+    <!-- Скрипт, в котором можно будет настроить реакцию на какое-либо 
+    событие элемента страницы: нажатие кнопки, изменение текстового поля и пр. -->
+	<script type="text/javascript">
+	</script>
+
+</body>
+</html>
